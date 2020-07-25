@@ -1,0 +1,15 @@
+.card.w-75.mb-2.chat-message.float-right.border-primary {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+.card-body {
+    display: inline-block;
+    width: 100%;
+    border: none !important;
+}
+.border-success {
+    display: inline-block;
+    padding: 5px 10px !important;
+    border-radius: 20px !important;
+}

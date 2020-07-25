@@ -1,0 +1,23 @@
+.list-group-item.active {
+  z-index: 2;
+  color: #fff;
+  background: #32465a !important;
+  border-right: 5px solid #435f7a !important;
+  
+}
+
+.convo-list {
+  height: auto;
+  max-height: 30vh !important;
+  overflow-x: hidden !important;
+  overflow-y: auto;
+}
+
+.bg {
+  background-color: #e4e7eb;
+}
+
+.list-group-item:hover {
+  color: white;
+  background-color: #32465a !important; 
+}
