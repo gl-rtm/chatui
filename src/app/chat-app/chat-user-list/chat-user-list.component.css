@@ -6,11 +6,13 @@
 }
 
 .bg {
-  background-color: #e4e7eb;
+  background-color: #b2dfdb;
 }
 
 .list-group-item:hover {
   color: white;
-  background-color: #32465a !important; 
+  background-color: #f5f5f5   !important; 
 }
-
+.bg[_ngcontent-c0] {
+  background-color: #b2dfdb !important;
+}

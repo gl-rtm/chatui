@@ -42,12 +42,11 @@
 }
 
 .instructions-text {
- // text-shadow: 2px 2px 8px #000000;
  color: #032442!important;
 }
 
 .bg {
-  background-color: #e4e7eb;
+  background-color: #b2dfdb;
 }
 .card.w-75.mb-2.chat-message.float-right.border-primary {
     display: inline-block;
