@@ -19,6 +19,22 @@ import { MomentAgoPipe } from './moment-ago.pipe';
 
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ChatBotComponent } from './chat-bot/chat-bot.component';
+
+import Amplify from 'aws-amplify';
+import { AmplifyAngularModule } from 'aws-amplify-angular';
+
+Amplify.configure({
+  Interactions: {
+    bots: {
+      "TelcoBot": {
+        "name": "TelcoBot",
+        "alias": "$LATEST",
+        "region": "us-east-1"
+      }
+    }
+  }
+})
 
 @NgModule({
   imports: [
@@ -26,7 +42,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     ChatAppRoutingModule,
     NgxPageScrollModule,
-    NgbModule
+    NgbModule,
+    AmplifyAngularModule
   ],
   declarations: [
     ChatComponent,
@@ -36,7 +53,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ChatConvoListComponent,
     ChatMessageViewComponent,
     MomentAgoPipe,
-    InfscrollDirective
+    InfscrollDirective,
+    ChatBotComponent
   ]
 })
 export class ChatAppModule {
