@@ -24,4 +24,8 @@ export class NavComponent {
   public signOut() {
     this.amplifyService.auth().signOut();
   }
+
+  public chatWithBot() {
+    this.router.navigate(['/bot']);
+  }
 }
