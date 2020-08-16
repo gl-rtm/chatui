@@ -61,3 +61,85 @@ select {
 input.amplify-form-input.ng-pristine.ng-valid.ng-touched {
     margin-top: 5px !important;
 }
+
+.amplify-interactions {
+    padding: 10px;
+    width: 80%;
+    align-self: center;
+}
+
+.amplify-interactions-conversation {
+    background-color: #b2dfdb !important;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.amplify-interactions-conversation > div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.amplify-interactions-actions {
+    background-color: #b2dfdb !important;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.amplify-form-input {
+    width: 90%;
+    background-color: white;
+    border-color: transparent;
+    height: 3em;
+    margin: 5px;
+    padding: 0.75em;
+    border-radius: 8px 0px 0px 8px;
+    font-family: inherit;
+    font-size: 1em;
+  }
+
+  .amplify-interactions-input  {
+    border: 1px solid #28a745!important;
+    background-color: white;
+    border-radius: 5px;
+    text-align: right;
+    margin: 5px;
+    padding: 5px;
+    width: auto;
+    align-self: flex-end;
+  }
+
+  .amplify-interactions-response  {
+    border: 1px solid #007bff!important;
+    background-color: white;
+    border-radius: 5px;
+    text-align: left;
+    margin: 5px;
+    padding: 5px;
+    width: auto;
+    align-self: flex-start;
+  }
+
+.amplify-interactions-input-timestamp, .amplify-interactions-response-timestamp {
+    border-radius: 5px;
+    font-size: x-small;
+    margin: 5px;
+}
+
+.amplify-interactions-response-timestamp {
+    text-align: left;
+    align-self: flex-start;
+}
+
+.amplify-interactions-input-timestamp {
+    text-align: right;
+    align-self: flex-end;
+}
+
+.amplify-interactions-button {
+    background-color: transparent;
+    border-color: transparent;
+}
