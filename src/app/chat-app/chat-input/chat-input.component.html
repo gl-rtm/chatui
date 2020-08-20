@@ -6,7 +6,12 @@
     (keyup.enter)="createNewMessage()" />
     <span class="input-group-btn">
       <button class="btn btn-dark" (click)="createNewMessage()" type="button">
-        Send&nbsp;<i class='ion-chatbubble-working'></i>
+        Send&nbsp;<i class='ion-chatbubble-working'></i> &nbsp;
+        <input
+              type="file" accept="image/png"
+              class="hide-style"
+              (change)="onChange($event)"
+          />
       </button>
     </span>
   </div>
