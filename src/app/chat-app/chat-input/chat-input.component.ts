@@ -5,7 +5,7 @@ import createMessage from '../graphql/mutations/createMessage';
 import getConversationMessages from '../graphql/queries/getConversationMessages';
 import { unshiftMessage, constants } from '../chat-helper';
 import Message from '../types/message';
-import { Analytics } from 'aws-amplify';
+import { Storage, Analytics } from 'aws-amplify';
 
 @Component({
   selector: 'app-chat-input',
@@ -32,7 +32,8 @@ export class ChatInputComponent {
       createdAt: id,
       sender: this.senderId,
       isSent: false,
-      id : id
+      id : id,
+      image: 'no image uploaded'
     };
     console.log('new message', message);
     this.message = '';
@@ -65,4 +66,60 @@ export class ChatInputComponent {
     });
     Analytics.record('Chat MSG Sent');
   }
+
+  async onChange(event: any) {
+    const file = event.target.files[0];
+    const filename = event.target.files[0].name;
+
+    const key = await Storage.put(filename, file, {
+      level: 'private',
+      contentType: 'image/png'
+      });
+    this.createNewMessageWithPath(key, filename);
+    Analytics.record('Attachment uploaded');
+}
+
+createNewMessageWithPath(imagePath: any, filename: string) {
+  const id = `${new Date().toISOString()}_${uuid()}`;
+  const message: Message = {
+    conversationId: this.conversation.id,
+    content: filename,
+    createdAt: id,
+    sender: this.senderId,
+    isSent: false,
+    id : id,
+    image: imagePath
+  };
+  console.log('Image Path', imagePath);
+  console.log('new message', message);
+  this.message = '';
+  this.appsync.hc().then(client => {
+    client.mutate({
+      mutation: createMessage,
+      variables: message,
+
+      optimisticResponse: () => ({
+        createMessage: {
+          ...message,
+          __typename: 'Message'
+        }
+      }),
+
+      update: (proxy, {data: { createMessage: _message }}) => {
+
+        const options = {
+          query: getConversationMessages,
+          variables: { conversationId: this.conversation.id, first: constants.messageFirst }
+        };
+
+        const data = proxy.readQuery(options);
+        const _tmp = unshiftMessage(data, _message);
+        proxy.writeQuery({...options, data: _tmp});
+      }
+    }).then(({data}) => {
+      console.log('mutation complete', data);
+    }).catch(err => console.log('Error creating message', err));
+  });
+  Analytics.record('Chat MSG Sent');
+}
 }
