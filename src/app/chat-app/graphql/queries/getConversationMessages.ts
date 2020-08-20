@@ -13,6 +13,7 @@ query getConversationMessages($conversationId: ID!, $after: String, $first: Int)
       createdAt
       sender
       isSent
+      image
     }
   }
 }`;

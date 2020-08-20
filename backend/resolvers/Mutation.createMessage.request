@@ -10,6 +10,7 @@
         "createdAt": {  "S": "${context.arguments.createdAt}" },
         "sender": {  "S": "${context.identity.sub}" },
         "isSent": {  "BOOL": true },
-		"id": { "S": "${context.arguments.id}" }
+		"id": { "S": "${context.arguments.id}" },
+        "image": {  "S": "${context.arguments.image}" }
     }
 }

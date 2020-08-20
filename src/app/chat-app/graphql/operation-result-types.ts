@@ -25,6 +25,7 @@ export type createMessageMutationVariables = {
   content?: string | null,
   conversationId: string,
   createdAt: string,
+  image: string,
 };
 
 export type createMessageMutation = {
@@ -42,6 +43,7 @@ export type createMessageMutation = {
     content: string,
     // Flag denoting if this message has been accepted by the server or not.
     isSent: boolean | null,
+    image: string,
   } | null,
 };
 
@@ -122,6 +124,7 @@ export type getConversationMessagesQuery = {
       sender: string | null,
       // Flag denoting if this message has been accepted by the server or not.
       isSent: boolean | null,
+      image: string,
     } | null > | null,
   } | null,
 };
@@ -173,6 +176,7 @@ export type subscribeToNewMessageSubscription = {
     content: string,
     // Flag denoting if this message has been accepted by the server or not.
     isSent: boolean | null,
+    image: string,
   } | null,
 };
 

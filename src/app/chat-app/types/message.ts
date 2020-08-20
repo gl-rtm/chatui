@@ -10,6 +10,7 @@ type Message = {
   sender: string | null,
   // Flag denoting if this message has been accepted by the server or not.
   isSent: boolean | null,
+  image: string,
 };
 
 export default Message;

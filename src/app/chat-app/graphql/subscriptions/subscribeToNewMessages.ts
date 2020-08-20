@@ -10,5 +10,6 @@ subscription subscribeToNewMessage($conversationId: ID!) {
     sender
     content
     isSent
+    image
   }
 }`;
