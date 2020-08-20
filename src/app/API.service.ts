@@ -58,6 +58,7 @@ export type CreateMessageMutation = {
     registered: boolean | null;
   } | null;
   sender: string | null;
+  image: string;
 };
 
 export type CreateUserMutation = {
@@ -149,6 +150,7 @@ export type AllMessageQuery = {
     registered: boolean | null;
   } | null;
   sender: string | null;
+  image: string;
 };
 
 export type AllMessageConnectionQuery = {
@@ -166,6 +168,7 @@ export type AllMessageConnectionQuery = {
     // Flag denoting if this message has been accepted by the server or not.
     isSent: boolean | null;
     sender: string | null;
+    image: string;
   } | null> | null;
   nextToken: string | null;
 };
@@ -206,6 +209,7 @@ export type AllMessageFromQuery = {
     registered: boolean | null;
   } | null;
   sender: string | null;
+  image: string;
 };
 
 export type AllUserQuery = {
@@ -288,6 +292,7 @@ export type SubscribeToNewMessageSubscription = {
     registered: boolean | null;
   } | null;
   sender: string | null;
+  image: string;
 };
 
 export type SubscribeToNewUCsSubscription = {
@@ -382,10 +387,11 @@ export class APIService {
     conversationId: string,
     createdAt: string,
     id: string,
-    content?: string
+    content?: string,
+    image?: string
   ): Promise<CreateMessageMutation> {
-    const statement = `mutation CreateMessage($content: String, $conversationId: ID!, $createdAt: String!, $id: ID!) {
-        createMessage(content: $content, conversationId: $conversationId, createdAt: $createdAt, id: $id) {
+    const statement = `mutation CreateMessage($content: String, $conversationId: ID!, $createdAt: String!, $id: ID!, $image: String) {
+        createMessage(content: $content, conversationId: $conversationId, createdAt: $createdAt, id: $id, image: $image) {
           __typename
           author {
             __typename
@@ -407,6 +413,7 @@ export class APIService {
             registered
           }
           sender
+          image
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -416,6 +423,9 @@ export class APIService {
     };
     if (content) {
       gqlAPIServiceArguments.content = content;
+    }
+    if (image) {
+      gqlAPIServiceArguments.image = image;
     }
     const response = (await API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
@@ -516,6 +526,7 @@ export class APIService {
             registered
           }
           sender
+          image
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -548,6 +559,7 @@ export class APIService {
             id
             isSent
             sender
+            image
           }
           nextToken
         }
@@ -595,6 +607,7 @@ export class APIService {
             registered
           }
           sender
+          image
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -690,6 +703,7 @@ export class APIService {
             registered
           }
           sender
+          image
         }
       }`
     )
