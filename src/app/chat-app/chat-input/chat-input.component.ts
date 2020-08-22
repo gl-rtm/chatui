@@ -15,16 +15,80 @@ import { Storage, Analytics } from 'aws-amplify';
 export class ChatInputComponent {
 
   message = '';
+  attachment = { file: '', filename: '' }
 
   @Input() conversation: any;
   @Input() senderId: string;
-  constructor(private appsync: AppsyncService) {}
+  constructor(private appsync: AppsyncService) { }
 
-  createNewMessage() {
-    if (!this.message || this.message.trim().length === 0) {
-      this.message = '';
-      return;
+  async createNewMessage() {
+
+    if (this.attachment.filename && this.attachment.filename.trim().length != 0) {
+      const key = await Storage.put(this.attachment.filename, this.attachment.file, {
+        level: 'public',
+        contentType: 'image/png',
+        ContentEncoding: 'base64'
+      });
+      this.createNewMessageWithPath(this.attachment.filename);
+      Analytics.record('Attachment uploaded');
+      this.attachment.file = '';
+      this.attachment.filename = '';
     }
+    else {
+      if (!this.message || this.message.trim().length === 0) {
+        this.message = '';
+        return;
+      }
+
+      const id = `${new Date().toISOString()}_${uuid()}`;
+      const message: Message = {
+        conversationId: this.conversation.id,
+        content: this.message,
+        createdAt: id,
+        sender: this.senderId,
+        isSent: false,
+        id: id,
+        image: 'no image uploaded'
+      };
+      console.log('new message', message);
+      this.message = '';
+      this.appsync.hc().then(client => {
+        client.mutate({
+          mutation: createMessage,
+          variables: message,
+
+          optimisticResponse: () => ({
+            createMessage: {
+              ...message,
+              __typename: 'Message'
+            }
+          }),
+
+          update: (proxy, { data: { createMessage: _message } }) => {
+
+            const options = {
+              query: getConversationMessages,
+              variables: { conversationId: this.conversation.id, first: constants.messageFirst }
+            };
+
+            const data = proxy.readQuery(options);
+            const _tmp = unshiftMessage(data, _message);
+            proxy.writeQuery({ ...options, data: _tmp });
+          }
+        }).then(({ data }) => {
+          console.log('mutation complete', data);
+        }).catch(err => console.log('Error creating message', err));
+      });
+      Analytics.record('Chat MSG Sent');
+    }
+  }
+
+  onChange(event: any) {
+    this.attachment.file = event.target.files[0];
+    this.attachment.filename = event.target.files[0].name;
+  }
+
+  createNewMessageWithPath(filename: string) {
     const id = `${new Date().toISOString()}_${uuid()}`;
     const message: Message = {
       conversationId: this.conversation.id,
@@ -32,9 +96,10 @@ export class ChatInputComponent {
       createdAt: id,
       sender: this.senderId,
       isSent: false,
-      id : id,
-      image: 'no image uploaded'
+      id: id,
+      image: filename
     };
+    console.log('File name', filename);
     console.log('new message', message);
     this.message = '';
     this.appsync.hc().then(client => {
@@ -49,7 +114,7 @@ export class ChatInputComponent {
           }
         }),
 
-        update: (proxy, {data: { createMessage: _message }}) => {
+        update: (proxy, { data: { createMessage: _message } }) => {
 
           const options = {
             query: getConversationMessages,
@@ -58,68 +123,12 @@ export class ChatInputComponent {
 
           const data = proxy.readQuery(options);
           const _tmp = unshiftMessage(data, _message);
-          proxy.writeQuery({...options, data: _tmp});
+          proxy.writeQuery({ ...options, data: _tmp });
         }
-      }).then(({data}) => {
+      }).then(({ data }) => {
         console.log('mutation complete', data);
       }).catch(err => console.log('Error creating message', err));
     });
     Analytics.record('Chat MSG Sent');
   }
-
-  async onChange(event: any) {
-    const file = event.target.files[0];
-    const filename = event.target.files[0].name;
-
-    const key = await Storage.put(filename, file, {
-      level: 'private',
-      contentType: 'image/png'
-      });
-    this.createNewMessageWithPath(key, filename);
-    Analytics.record('Attachment uploaded');
-}
-
-createNewMessageWithPath(imagePath: any, filename: string) {
-  const id = `${new Date().toISOString()}_${uuid()}`;
-  const message: Message = {
-    conversationId: this.conversation.id,
-    content: filename,
-    createdAt: id,
-    sender: this.senderId,
-    isSent: false,
-    id : id,
-    image: imagePath
-  };
-  console.log('Image Path', imagePath);
-  console.log('new message', message);
-  this.message = '';
-  this.appsync.hc().then(client => {
-    client.mutate({
-      mutation: createMessage,
-      variables: message,
-
-      optimisticResponse: () => ({
-        createMessage: {
-          ...message,
-          __typename: 'Message'
-        }
-      }),
-
-      update: (proxy, {data: { createMessage: _message }}) => {
-
-        const options = {
-          query: getConversationMessages,
-          variables: { conversationId: this.conversation.id, first: constants.messageFirst }
-        };
-
-        const data = proxy.readQuery(options);
-        const _tmp = unshiftMessage(data, _message);
-        proxy.writeQuery({...options, data: _tmp});
-      }
-    }).then(({data}) => {
-      console.log('mutation complete', data);
-    }).catch(err => console.log('Error creating message', err));
-  });
-  Analytics.record('Chat MSG Sent');
-}
 }

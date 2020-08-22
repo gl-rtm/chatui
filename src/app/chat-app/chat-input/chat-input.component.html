@@ -1,17 +1,24 @@
 <div class="rounded p-2 mt-2 bg border border-dark rounded">
   <div class="input-group">
-    <input type="text" class="form-control no-focus"
-    required placeholder="Type a Message"
-    id="message" [(ngModel)]="message" name="message"
-    (keyup.enter)="createNewMessage()" />
+    <div>
+      <input type="text" class="form-control no-focus"
+        required placeholder="Type a Message"
+        id="message" [(ngModel)]="message" name="message"
+        (keyup.enter)="createNewMessage()" />
+        <p>{{attachment.filename}}</p>
+    </div>
+    
     <span class="input-group-btn">
+      <input
+              type="file" accept="image/png"
+              (change)="onChange($event)"
+              style="display: none" #hiddenfileinput
+          /> 
+      <button (click)="hiddenfileinput.click()" >
+            <img src="../../../assets/img/attachment.jpg" width="30" height="30" alt="Attachment Icon">
+      </button>
       <button class="btn btn-dark" (click)="createNewMessage()" type="button">
         Send&nbsp;<i class='ion-chatbubble-working'></i> &nbsp;
-        <input
-              type="file" accept="image/png"
-              class="hide-style"
-              (change)="onChange($event)"
-          />
       </button>
     </span>
   </div>
