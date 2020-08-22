@@ -3,6 +3,7 @@ import { AppsyncService } from '../appsync.service';
 import Message from '../types/message';
 import readUserFragment from '../graphql/queries/readUserFragment';
 import User from '../types/user';
+import { Storage } from 'aws-amplify';
 
 const USER_ID_PREFIX = 'User:';
 
@@ -22,6 +23,8 @@ export class ChatMessageComponent implements AfterViewInit, OnInit, OnChanges {
   user: User;
   createdAt;
 
+  state = { fileUrl:''}
+
   constructor(private appsync: AppsyncService) {}
 
   ngOnInit() {
@@ -38,6 +41,18 @@ export class ChatMessageComponent implements AfterViewInit, OnInit, OnChanges {
       if (propName === 'message') {
         const chng = changes[propName];
         this.createdAt = chng.currentValue.createdAt.split('_')[0];
+
+        Storage.get(this.message.image, { 
+          level: 'public', 
+          contentType: 'image/png',
+          ContentEncoding: 'base64'
+        }).then(data => {
+          console.log('Image URL: ' + data);
+          this.state.fileUrl = data.toString();
+        })
+        .catch( err => {
+          console.log('Error fetching image')
+        })
       }
     }
   }
