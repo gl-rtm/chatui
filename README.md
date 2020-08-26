@@ -69,10 +69,11 @@ This is a Starter Angular Progressive Web Application (PWA) that uses AWS AppSyn
     $ npm install
     ```
 
-4. Add authentication and analytics to the project with the default options:
+4. Add authentication, storage and analytics to the project with the default options:
 
     ```bash
     $ amplify add auth
+	$ amplify add storage
     $ amplify add analytics
     ```
 
