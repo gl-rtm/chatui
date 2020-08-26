@@ -48,7 +48,7 @@ export class ChatInputComponent {
         sender: this.senderId,
         isSent: false,
         id: id,
-        image: 'no image uploaded'
+        image: ''
       };
       console.log('new message', message);
       this.message = '';
