@@ -27,8 +27,8 @@ import { AmplifyAngularModule } from 'aws-amplify-angular';
 Amplify.configure({
   Interactions: {
     bots: {
-      "TelcoBot": {
-        "name": "TelcoBot",
+      "RtmServiceBot": {
+        "name": "RtmServiceBot",
         "alias": "$LATEST",
         "region": "us-east-1"
       }
