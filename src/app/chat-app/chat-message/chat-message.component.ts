@@ -23,11 +23,13 @@ export class ChatMessageComponent implements AfterViewInit, OnInit, OnChanges {
   user: User;
   createdAt;
 
-  state = { fileUrl:''}
+  state = { fileUrl: '' }
+  hasImage = false;
 
-  constructor(private appsync: AppsyncService) {}
+  constructor(private appsync: AppsyncService) { }
 
   ngOnInit() {
+    this.hasImage = false;
     this.appsync.hc().then(client => {
       this.user = client.readFragment({
         id: USER_ID_PREFIX + this.message.sender,
@@ -37,22 +39,28 @@ export class ChatMessageComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.hasImage = false;
     for (let propName in changes) {
       if (propName === 'message') {
         const chng = changes[propName];
         this.createdAt = chng.currentValue.createdAt.split('_')[0];
 
-        Storage.get(this.message.image, { 
-          level: 'public', 
-          contentType: 'image/png',
-          ContentEncoding: 'base64'
-        }).then(data => {
-          console.log('Image URL: ' + data);
-          this.state.fileUrl = data.toString();
-        })
-        .catch( err => {
-          console.log('Error fetching image')
-        })
+        if (this.message.image !== '') {
+          Storage.get(this.message.image, {
+            level: 'public',
+            contentType: 'image/png',
+            ContentEncoding: 'base64'
+          }).then(data => {
+            console.log('Image URL: ' + data);
+            this.state.fileUrl = data.toString();
+            this.hasImage = true;
+          })
+            .catch(err => {
+              console.log('Error fetching image')
+              this.state.fileUrl = ''
+              this.hasImage = false;
+            })
+        }
       }
     }
   }
