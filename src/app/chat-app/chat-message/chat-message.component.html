@@ -16,7 +16,7 @@
   </div>
 </div>
 <div>
-<div ng-if="hasImage">
+<div *ngIf="hasImage">
   <img src="{{this.state.fileUrl}}" width="100%" height="100%" />
 </div>
 <p class="card-text mb-0">{{message.content}}</p>
